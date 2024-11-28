@@ -5,22 +5,21 @@ export default function LoginScreen({ navigation }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [fadeAnim] = useState(new Animated.Value(0)); // Valor inicial para o fade-in
+  const [fadeAnim] = useState(new Animated.Value(0));
 
   const handleLogin = () => {
     if (username === 'Admin' && password === '1234') {
-      navigation.replace('Estoque'); // Redireciona para a tela "Estoque"
+      navigation.replace('Estoque'); 
     } else {
       alert('Usuário ou senha inválidos!');
     }
   };
 
   useEffect(() => {
-    // Animação de fade-in
     Animated.timing(fadeAnim, {
-      toValue: 1, // Finaliza com o valor 1 (totalmente opaco)
-      duration: 1000, // Duração de 1 segundo
-      useNativeDriver: true, // Utiliza o driver nativo para animações mais fluidas
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: true,
     }).start();
   }, [fadeAnim]);
 
@@ -61,45 +60,45 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: 20,
-    backgroundColor: '#6A1B9A', // Cor roxa (cor de açaí)
+    backgroundColor: '#6A1B9A',
   },
   formContainer: {
-    width: '100%', // Garante que o formulário ocupe a largura inteira
+    width: '100%',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
-    color: '#fff', // Cor branca para o título
+    color: '#fff',
   },
   input: {
     borderWidth: 1,
-    borderColor: '#fff', // Borda branca para os campos
+    borderColor: '#fff',
     borderRadius: 5,
     padding: 10,
     marginBottom: 15,
     fontSize: 16,
-    width: '100%', // Define a largura dos campos
-    color: '#fff', // Texto branco nos campos de entrada
+    width: '100%',
+    color: '#fff',
   },
   inputPlaceholder: {
-    color: '#D1C4E9', // Cor suave de branco/púrpura para o placeholder
+    color: '#D1C4E9',
   },
   passwordContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: '100%', // Garante que o campo de senha tenha a mesma largura
+    width: '100%',
     position: 'relative',
   },
   eyeIcon: {
     position: 'absolute',
     right: 10,
-    top: 5, // Subindo o ícone um pouquinho para centralizar
+    top: 5,
   },
   eyeIconText: {
     fontSize: 24,
-    color: '#fff', // Cor branca para o ícone
+    color: '#fff',
   },
   loginButton: {
     backgroundColor: '#007BFF',

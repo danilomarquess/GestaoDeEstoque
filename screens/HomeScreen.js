@@ -4,7 +4,7 @@ import { Picker } from '@react-native-picker/picker';
 import LinearGradient from 'react-native-linear-gradient';
 
 export default function HomeScreen({ navigation, items, setItems }) {
-  const [categories, setCategories] = useState(['Bebidas', 'Cereais', 'Doces', 'Outros']); // Estado para categorias
+  const [categories, setCategories] = useState(['Bebidas', 'Cereais', 'Doces', 'Outros']);
   const [editingItemId, setEditingItemId] = useState(null);
   const [editingName, setEditingName] = useState('');
   const [editingQuantity, setEditingQuantity] = useState('');
@@ -15,8 +15,6 @@ export default function HomeScreen({ navigation, items, setItems }) {
   const [incrementInterval, setIncrementInterval] = useState(null);
   const [decrementInterval, setDecrementInterval] = useState(null);
   
-
-  // Dados iniciais de produtos da loja de açaí
   const initialItems = [
     { id: 1, name: 'Açaí Bowl', quantity: 10, category: 'Bebidas' },
     { id: 2, name: 'Granola', quantity: 20, category: 'Cereais' },
@@ -48,13 +46,11 @@ export default function HomeScreen({ navigation, items, setItems }) {
 
   let isInitialized = false;
   const [alertsEnabled, setAlertsEnabled] = useState(false);
-  // Efeito para inicializar os itens
   useEffect(() => {
     setItems(initialItems);
-    setTimeout(() => setAlertsEnabled(true), 500); // Ativa os alertas após a inicialização
+    setTimeout(() => setAlertsEnabled(true), 500);
   }, []);
 
-  // Efeito para atualizar as categorias após a modificação
   useEffect(() => {
     const categoriesInItems = [...new Set(items.map(item => item.category))];
     setCategories((prevCategories) => [
@@ -64,16 +60,15 @@ export default function HomeScreen({ navigation, items, setItems }) {
   }, [items]);
 
   useEffect(() => {
-    if (!alertsEnabled) return; // Evita executar até que os alertas sejam habilitados
+    if (!alertsEnabled) return;
   
-    // Verifica itens com estoque crítico (menos de 5, mas maior que 0)
     const lowStockItems = items.filter(item => item.quantity < 5 && item.quantity > 0);
     if (lowStockItems.length > 0) {
       const lowStockNames = lowStockItems.map(item => item.name).join(', ');
       alert(`Estoque crítico para: ${lowStockNames}`);
     }
   
-    // Verifica itens que acabaram (quantidade igual a 0)
+  
     const outOfStockItems = items.filter(item => item.quantity === 0);
     if (outOfStockItems.length > 0) {
       const outOfStockNames = outOfStockItems.map(item => item.name).join(', ');
@@ -82,14 +77,13 @@ export default function HomeScreen({ navigation, items, setItems }) {
   }, [items, alertsEnabled]);
 
   useEffect(() => {
-    if (!alertsEnabled) return; // Evita executar até que os alertas sejam habilitados
+    if (!alertsEnabled) return; 
   
     items.forEach(item => {
       if (item.quantity === 0 && !item.alertedOutOfStock) {
         alert(`Produto acabou: ${item.name}`);
-        item.alertedOutOfStock = true; // Marca o item como já alertado
+        item.alertedOutOfStock = true;
       } else if (item.quantity > 0 && item.alertedOutOfStock) {
-        // Reseta a marcação se o estoque for reabastecido
         item.alertedOutOfStock = false;
       }
     });
@@ -122,7 +116,6 @@ export default function HomeScreen({ navigation, items, setItems }) {
           : item
       );
   
-      // Verifica se algum item tem estoque baixo após edição
       updatedItems.forEach((item) => {
         if (item.quantity < 5 && alertsEnabled) {
           alert(`Estoque baixo: ${item.name}`);
@@ -147,13 +140,9 @@ export default function HomeScreen({ navigation, items, setItems }) {
 
   const handleDeleteItem = (id) => {
     setItems((prevItems) => {
-      // Remove o item com o id específico
       const updatedItems = prevItems.filter((item) => item.id !== id);
-      
-      // Atualiza as categorias removendo as que não têm mais itens
       const remainingCategories = [...new Set(updatedItems.map(item => item.category))];
       
-      // Atualiza o estado de categorias com as categorias restantes
       setCategories((prevCategories) => prevCategories.filter(category => remainingCategories.includes(category)));
   
       return updatedItems;
@@ -167,7 +156,6 @@ export default function HomeScreen({ navigation, items, setItems }) {
       prevItems.map((item) => {
         if (item.id === id) {
           const newQuantity = item.quantity + 1;
-          // Incrementa a quantidade sem disparar o alerta
           return { ...item, quantity: newQuantity };
         }
         return item;
@@ -179,9 +167,8 @@ const decrementQuantity = (id) => {
   setItems((prevItems) =>
     prevItems.map((item) => {
       if (item.id === id) {
-        const newQuantity = Math.max(item.quantity - 1, 0); // Impede valores negativos
+        const newQuantity = Math.max(item.quantity - 1, 0);
 
-        // Apresenta alerta de estoque crítico apenas quando a quantidade for menor que 5 após o decremento
         if (newQuantity === 0) {
           alert(`Produto acabou: ${item.name}`);
         } else if (newQuantity < 5 && newQuantity > 0) {
@@ -197,12 +184,12 @@ const decrementQuantity = (id) => {
   
 
   const startIncrement = (id) => {
-    const interval = setInterval(() => incrementQuantity(id), 200); // 200ms de intervalo para aumento rápido
+    const interval = setInterval(() => incrementQuantity(id), 200);
     setIncrementInterval(interval);
   };
 
   const startDecrement = (id) => {
-    const interval = setInterval(() => decrementQuantity(id), 200); // 200ms de intervalo para decremento rápido
+    const interval = setInterval(() => decrementQuantity(id), 200);
     setDecrementInterval(interval);
   };
 
@@ -217,7 +204,7 @@ const decrementQuantity = (id) => {
   const matchesText = item.name.toLowerCase().includes(filterText.toLowerCase());
   const matchesCategory = filterCategory
     ? item.category.toLowerCase() === filterCategory.toLowerCase()
-    : true; // Se filterCategory estiver vazio, retorna true para todos os itens
+    : true;
   return matchesText && matchesCategory;
 });
 
@@ -273,7 +260,7 @@ const renderItem = ({ item }) => {
           <View style={styles.actions}>
             <TouchableOpacity
               style={styles.adjustButton}
-              onPress={() => decrementQuantity(item.id)} // Usar onPress para clique único
+              onPress={() => decrementQuantity(item.id)}
               onPressIn={() => startDecrement(item.id)}
               onPressOut={stopInterval}
             >
@@ -282,7 +269,7 @@ const renderItem = ({ item }) => {
             <Text style={styles.slashText}>/</Text>
             <TouchableOpacity
               style={styles.adjustButton}
-              onPress={() => incrementQuantity(item.id)} // Usar onPress para clique único
+              onPress={() => incrementQuantity(item.id)}
               onPressIn={() => startIncrement(item.id)}
               onPressOut={stopInterval}
             >
@@ -331,11 +318,11 @@ const renderItem = ({ item }) => {
           onPress={() =>
             navigation.navigate('Adicionar Item', {
               setItems,
-              categories, // Passando a lista de categorias atualizada
-              handleAddCategory, // Passando a função de adicionar categoria
+              categories,
+              handleAddCategory,
             })
           }
-          color="#800080" // Código hex para roxo (cor de açaí)
+          color="#800080"
         />
       </View>
 
@@ -375,16 +362,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   adjustButton: {
-    backgroundColor: 'black', // Fundo preto
-    borderRadius: 0, // Deixa os botões mais quadrados (sem arredondar os cantos)
-    padding: 10, // Aumenta o tamanho do botão para ficar mais visível
+    backgroundColor: 'black',
+    borderRadius: 0,
+    padding: 10,
     marginHorizontal: 5,
     justifyContent: 'center',
     alignItems: 'center',
 
   },
   adjustButtonText: {
-    color: 'white', // Texto branco para contraste com o fundo preto
+    color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
 
@@ -409,32 +396,32 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   editButtonsContainer: {
-    flexDirection: 'row', // Coloca os botões em linha
-    justifyContent: 'space-between', // Distribui o espaço igualmente entre os botões
-    width: '100%', // Garante que os botões ocupem toda a largura disponível
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
 
   },
   saveButton: {
     backgroundColor: '#28a745',
     padding: 10,
     borderRadius: 5,
-    flex: 1, // Faz o botão "Salvar" ocupar o máximo de espaço possível
-    marginRight: 5, // Adiciona um pequeno espaço entre os botões
+    flex: 1,
+    marginRight: 5,
 
   },
   cancelButton: {
     backgroundColor: '#dc3545',
     padding: 10,
     borderRadius: 5,
-    flex: 1, // Faz o botão "Cancelar" ocupar o máximo de espaço possível
-    marginRight: 5, // Adiciona um pequeno espaço entre os botões
+    flex: 1,
+    marginRight: 5,
 
   },
   deleteButton: {
     backgroundColor: '#ffc107',
     padding: 10,
     borderRadius: 5,
-    flex: 1, // Faz o botão "Excluir" ocupar o máximo de espaço possível
+    flex: 1,
   },
   searchInput: {
     borderWidth: 1,
@@ -470,17 +457,17 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: 'black',
-    marginHorizontal: 5, // Espaçamento entre os botões e o símbolo
+    marginHorizontal: 5,
   },
   slashText: {
-    fontSize: 16, // Tamanho da fonte
-    color: 'black', // Cor preta
-    fontWeight: 'bold', // Negrito
-    marginHorizontal: 5, // Espaço horizontal ao redor
+    fontSize: 16,
+    color: 'black',
+    fontWeight: 'bold',
+    marginHorizontal: 5,
   },
   quantityInput: {
-    width: 80, // Define uma largura menor
-    textAlign: 'center', // Centraliza o texto
+    width: 80,
+    textAlign: 'center',
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,

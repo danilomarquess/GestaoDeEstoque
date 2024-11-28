@@ -14,36 +14,31 @@ export default function AddItemScreen({ navigation, route }) {
     if (editingItem) {
       const { name, quantity, category } = editingItem;
       setName(name);
-      setQuantity(quantity.toString());  // Certifique-se de que quantity seja string
+      setQuantity(quantity.toString());
       setCategory(category);
     }
   }, [editingItem]);
 
   const handleSave = () => {
-    // Verificar se os campos obrigatórios foram preenchidos
     if (!name || !quantity) {
       Alert.alert('Erro', 'Por favor, preencha todos os campos!');
       return;
     }
-  
-    // Verificar se a categoria foi selecionada ou se uma nova categoria foi inserida
+
     if (!category && !newCategory.trim()) {
       Alert.alert('Erro', 'Por favor, selecione uma categoria existente ou crie uma nova!');
       return;
     }
-  
-    // Determinar a categoria final a ser usada
+
     const selectedCategory = category || newCategory.trim();
-  
-    // Criar o novo item
+
     const newItem = {
       id: editingItem ? editingItem.id : Date.now().toString(),
       name,
       quantity: parseInt(quantity, 10) || 0,
       category: selectedCategory,
     };
-  
-    // Adicionar ou atualizar o item no estado
+
     setItems((prevItems) => {
       if (editingItem) {
         return prevItems.map(item =>
@@ -53,13 +48,11 @@ export default function AddItemScreen({ navigation, route }) {
         return [...prevItems, newItem];
       }
     });
-  
-    // Se uma nova categoria foi inserida e a categoria não foi selecionada, adiciona a nova categoria
+
     if (newCategory.trim() && !category) {
       handleAddCategory(newCategory.trim());
     }
-  
-    // Voltar para a tela anterior
+
     navigation.goBack();
   };
   
@@ -106,7 +99,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#fffaf2', // Cor de fundo (use o código hexadecimal ou um nome de cor)
+    backgroundColor: '#fffaf2',
   },
   input: {
     height: 40,
